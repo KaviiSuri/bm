@@ -3,7 +3,7 @@ use std::{fs::File, process};
 
 const BM_EXECUTION_LIMIT: usize = 69;
 
-static USAGE: &'static str = "Usage: ./bmi <input_file>.bm";
+static USAGE: &'static str = "Usage: ./bme <input_file>.bm";
 
 fn main() {
     let mut args = std::env::args();
