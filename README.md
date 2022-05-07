@@ -10,6 +10,10 @@ $ make examples
 $ ./target/debug/bmi ./examples/fib.bm
 ```
 
+## Components
+
+### basm
+Assembly language for the virtual machine. For examples see [./examples/](./examples/) folder.
 
 ## Primary Motivation
 

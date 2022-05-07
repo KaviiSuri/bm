@@ -1,7 +1,7 @@
 use bm::BM;
 use std::fs::File;
 
-static USAGE: &'static str = "Usage: ./ebasm <input_file>.ebasm <output_file>.bm";
+static USAGE: &'static str = "Usage: ./basm <input_file>.basm <output_file>.bm";
 
 fn main() {
     let mut args = std::env::args();
