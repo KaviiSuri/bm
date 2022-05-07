@@ -1,0 +1,6 @@
+push 0
+push 1
+dup 0
+dup 2
+plus
+jmp 2
