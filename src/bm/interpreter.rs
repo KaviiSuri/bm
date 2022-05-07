@@ -28,7 +28,19 @@ impl Display for InterpreterErr {
 }
 
 impl BM {
-    pub fn execute(&mut self) -> Result<(), InterpreterErr> {
+    pub fn execute_program(&mut self, limit: Option<usize>) -> Result<(), InterpreterErr> {
+        let mut i = 1;
+        while !self.is_halted() {
+            match limit {
+                Some(l) if l <= i => break,
+                _ => {}
+            }
+            self.execute_instruction()?;
+            i += 1;
+        }
+        Ok(())
+    }
+    pub fn execute_instruction(&mut self) -> Result<(), InterpreterErr> {
         if self.ip < 0 || self.program.len() as Word <= self.ip {
             return Err(InterpreterErr::IllegalInstructionAccess(self.ip));
         }

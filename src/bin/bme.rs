@@ -21,15 +21,12 @@ fn main() {
     let mut bm: BM = Default::default();
     bm.load_program_from_memory(program.as_slice());
 
-    for _ in 0..BM_EXECUTION_LIMIT {
-        if bm.is_halted() {
-            break;
-        }
-        if let Err(t) = bm.execute() {
-            eprintln!("{}", t);
+    match bm.execute_program(Some(BM_EXECUTION_LIMIT)) {
+        Ok(()) => bm.dump_stack(&mut std::io::stdout()).expect("should work"),
+        Err(e) => {
+            eprintln!("{}", e);
             bm.dump_stack(&mut std::io::stderr()).expect("should work");
             process::exit(1);
         }
-    }
-    bm.dump_stack(&mut std::io::stderr()).expect("should work");
+    };
 }
