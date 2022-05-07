@@ -12,10 +12,10 @@ pub mod serialize_deserialize;
 
 #[derive(Debug)]
 pub struct BM {
-    stack: [Word; BM_STACK_CAPACITY],
+    stack: Vec<Word>,
     stack_size: usize,
     halt: bool,
-    program: [Instruction; BM_PROGRAM_CAPACITY],
+    program: Vec<Instruction>,
     program_size: usize,
     ip: Word,
 }
@@ -23,10 +23,10 @@ pub struct BM {
 impl Default for BM {
     fn default() -> Self {
         Self {
-            stack: [0; BM_STACK_CAPACITY],
+            stack: vec![0; BM_STACK_CAPACITY],
             stack_size: Default::default(),
             halt: Default::default(),
-            program: [Default::default(); BM_PROGRAM_CAPACITY],
+            program: vec![Default::default(); BM_PROGRAM_CAPACITY],
             program_size: Default::default(),
             ip: Default::default(),
         }

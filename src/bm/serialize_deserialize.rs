@@ -4,11 +4,11 @@ use std::io::{Read, Write};
 use crate::{Instruction, BM};
 
 impl BM {
-    pub fn serialize_program_into<W>(w: W, program: &[Instruction])
+    pub fn serialize_program_into<W>(&self, w: W)
     where
         W: Write,
     {
-        bincode::serialize_into(w, program).expect("could not serialzie");
+        bincode::serialize_into(w, &self.program).expect("could not serialzie");
     }
 
     pub fn deserialize_program_from<R>(r: R) -> Vec<Instruction>

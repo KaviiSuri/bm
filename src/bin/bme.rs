@@ -17,7 +17,7 @@ fn main() {
         .expect("Could not read input file.");
 
     let program = BM::deserialize_program_from(input_file);
-    println!("{:?}", &program);
+
     let mut bm: BM = Default::default();
     bm.load_program_from_memory(program.as_slice());
 

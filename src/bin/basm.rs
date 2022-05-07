@@ -26,5 +26,7 @@ fn main() {
         )
         .expect("Could not open or create output file");
 
-    BM::serialize_program_into(&output_file, &program);
+    let mut bm: BM = Default::default();
+    bm.load_program_from_memory(&program);
+    bm.serialize_program_into(&output_file);
 }
