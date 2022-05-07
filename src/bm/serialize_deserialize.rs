@@ -31,4 +31,14 @@ impl BM {
         v.push(Instruction::Halt);
         v
     }
+
+    pub fn program_to_asm<W>(&self, w: &mut W) -> std::io::Result<()>
+    where
+        W: Write,
+    {
+        for &inst in &self.program {
+            w.write_fmt(format_args!("{}\n", inst))?;
+        }
+        Ok(())
+    }
 }

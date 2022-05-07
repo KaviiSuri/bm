@@ -29,18 +29,18 @@ impl Default for Instruction {
 impl Display for Instruction {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Instruction::Nop => write!(f, "Instruction::Nop"),
-            Instruction::Push(op) => write!(f, "Instruction::Push({})", op),
-            Instruction::Plus => write!(f, "Instruction::Plus"),
-            Instruction::Minus => write!(f, "Instruction::Minus"),
-            Instruction::Div => write!(f, "Instruction::Div"),
-            Instruction::Mult => write!(f, "Instruction::Mult"),
-            Instruction::Jump(addr) => write!(f, "Instruction::Jump({})", addr),
-            Instruction::JumpIf(addr) => write!(f, "Instruction::JumpIf({})", addr),
-            Instruction::Eq => write!(f, "Instruction::Eq"),
-            Instruction::Halt => write!(f, "Instruction::Halt"),
-            Instruction::PrintDebug => write!(f, "Instruction::PrintDebug"),
-            Instruction::Dup(addr) => write!(f, "Instruction::Dup({})", addr),
+            Instruction::Nop => write!(f, "nop"),
+            Instruction::Push(op) => write!(f, "push {}", op),
+            Instruction::Plus => write!(f, "plus"),
+            Instruction::Minus => write!(f, "minus"),
+            Instruction::Div => write!(f, "div"),
+            Instruction::Mult => write!(f, "mult"),
+            Instruction::Jump(addr) => write!(f, "jmp {}", addr),
+            Instruction::JumpIf(addr) => write!(f, "jmp_if({})", addr),
+            Instruction::Eq => write!(f, "eq"),
+            Instruction::Halt => write!(f, "halt"),
+            Instruction::PrintDebug => write!(f, "print_debug"),
+            Instruction::Dup(addr) => write!(f, "dup {}", addr),
         }
     }
 }

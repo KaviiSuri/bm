@@ -13,21 +13,23 @@ pub mod serialize_deserialize;
 #[derive(Debug)]
 pub struct BM {
     stack: Vec<Word>,
-    stack_size: usize,
     halt: bool,
     program: Vec<Instruction>,
-    program_size: usize,
     ip: Word,
 }
 
 impl Default for BM {
     fn default() -> Self {
+        let mut stack = Vec::new();
+        stack.reserve(BM_STACK_CAPACITY);
+
+        let mut program = Vec::new();
+        program.reserve(BM_PROGRAM_CAPACITY);
+
         Self {
-            stack: vec![0; BM_STACK_CAPACITY],
-            stack_size: Default::default(),
+            stack,
             halt: Default::default(),
-            program: vec![Default::default(); BM_PROGRAM_CAPACITY],
-            program_size: Default::default(),
+            program,
             ip: Default::default(),
         }
     }
@@ -38,15 +40,13 @@ impl BM {
         self.halt
     }
     pub fn push_inst(&mut self, inst: Instruction) {
-        assert!(self.program_size <= BM_PROGRAM_CAPACITY);
-        self.program[self.program_size] = inst;
-        self.program_size += 1;
+        assert!(self.program.len() <= BM_PROGRAM_CAPACITY);
+        self.program.push(inst);
     }
 
     pub fn load_program_from_memory(&mut self, program: &[Instruction]) {
         assert!(program.len() <= BM_PROGRAM_CAPACITY);
-        self.program[..program.len()].copy_from_slice(program);
-        self.program_size = program.len();
+        self.program.extend_from_slice(program);
     }
 
     pub fn dump_stack<W>(&self, f: &mut W) -> std::io::Result<()>
@@ -54,11 +54,11 @@ impl BM {
         W: Write,
     {
         writeln!(f, "Stack: ")?;
-        if self.stack_size == 0 {
+        if self.stack.len() == 0 {
             writeln!(f, "   [empty]")?;
             return Ok(());
         }
-        for i in 0..self.stack_size {
+        for i in 0..self.stack.len() {
             writeln!(f, "   {}", self.stack[i])?;
         }
         Ok(())
