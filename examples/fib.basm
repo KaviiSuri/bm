@@ -1,6 +1,8 @@
-push 0
-push 1
-dup 0
-dup 2
-plus
-jmp 2
+# First Tow Fibonacci Numbers 
+  push 0
+  push 1
+# The Loop
+  dup 1
+  dup 1
+  plus
+  jmp 2 # Repeat

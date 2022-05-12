@@ -78,7 +78,8 @@ impl Instruction {
         if line.len() == 0 {
             return Err(InstructionParseErr::EmptyLine);
         }
-        let mut line_iter = line.split_whitespace();
+        let (comment_removed_line, _) = line.split_once("#").unwrap_or((line, ""));
+        let mut line_iter = comment_removed_line.split_whitespace();
         let name = line_iter.next().unwrap();
 
         // ==== Instruction::Push ===============

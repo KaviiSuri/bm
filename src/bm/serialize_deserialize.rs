@@ -25,7 +25,9 @@ impl BM {
         let mut v = vec![];
         for line in std::io::BufReader::new(source).lines() {
             if let Ok(line) = line {
-                v.push(Instruction::from_asm(&line).unwrap());
+                if !line.starts_with("#") {
+                    v.push(Instruction::from_asm(&line).unwrap());
+                }
             }
         }
         v.push(Instruction::Halt);
