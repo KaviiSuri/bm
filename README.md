@@ -7,7 +7,7 @@ This is a basic virtual machine written in rust. This project was done by taking
 
 ```console
 $ make examples
-$ ./target/debug/bme ./examples/fib.bm
+$ ./target/debug/bme -i ./examples/fib.bm -l 69
 ```
 
 ## Components
