@@ -1,5 +1,5 @@
 pub mod bm;
-pub use bm::BM;
+pub use crate::bm::BM;
 
-pub use bm::instruction;
-pub use bm::instruction::Instruction;
+pub use crate::bm::instruction;
+pub use crate::bm::instruction::Instruction;
