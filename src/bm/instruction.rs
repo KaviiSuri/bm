@@ -105,6 +105,7 @@ impl Instruction {
                 name[0..name.len() - 1].to_string(),
                 bm.program.len() as Word,
             )),
+            "nop" => Ok(Inst(Self::Nop)),
             "push" => match line_iter.next() {
                 Some(op) => match op.parse::<Word>() {
                     Ok(op) => Ok(Inst(Self::Push(op))),
@@ -120,6 +121,9 @@ impl Instruction {
                 None => Err(InstructionParseErr::OperandNotFound(line.to_string())),
             },
             "plus" => Ok(Inst(Self::Plus)),
+            "minus" => Ok(Inst(Self::Minus)),
+            "div" => Ok(Inst(Self::Div)),
+            "mult" => Ok(Inst(Self::Mult)),
             "jmp" => match line_iter.next() {
                 Some(op) => match op.parse::<Word>() {
                     Ok(op) => Ok(Inst(Self::Jump(Some(op)))),
@@ -146,6 +150,8 @@ impl Instruction {
                 },
                 None => Err(InstructionParseErr::OperandNotFound(line.to_string())),
             },
+            "eq" => Ok(Inst(Self::Eq)),
+            "halt" => Ok(Inst(Self::Halt)),
             _ => Err(InstructionParseErr::InvalidInstruction(line.to_string())),
         }
     }
