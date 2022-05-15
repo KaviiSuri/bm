@@ -1,4 +1,4 @@
-use bm::{bm::serialize_deserialize::LabelTable, BM};
+use bm::{bm::serialize_deserialize::BasmCtx, BM};
 use std::fs::File;
 static USAGE: &'static str = "Usage: ./basm <input_file>.basm <output_file>.bm";
 
@@ -14,8 +14,8 @@ fn main() {
         .expect("Could not read input file.");
 
     let mut bm: BM = Default::default();
-    let mut lt = LabelTable::new();
-    bm.program_from_asm(&input_file, &mut lt);
+    let mut ctx: BasmCtx = Default::default();
+    bm.program_from_asm(&input_file, &mut ctx);
 
     let output_file = File::options()
         .create(true)

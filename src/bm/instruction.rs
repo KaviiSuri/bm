@@ -2,12 +2,9 @@ use std::fmt::Display;
 
 use serde::{Deserialize, Serialize};
 
-use crate::{
-    bm::{serialize_deserialize::UnresolvedLabel, Word},
-    BM,
-};
+use crate::{bm::Word, BM};
 
-use super::serialize_deserialize::UnresolvedTable;
+use super::serialize_deserialize::BasmCtx;
 
 type Address = Option<Word>;
 
@@ -79,79 +76,70 @@ impl Display for InstructionParseErr {
     }
 }
 
-pub enum AssemblerOp {
-    Inst(Instruction),
-    Label(String, Word),
-}
-
 impl Instruction {
     pub fn from_asm(
         line: &str,
         bm: &BM,
-        ut: &mut UnresolvedTable,
-    ) -> Result<AssemblerOp, InstructionParseErr> {
-        use AssemblerOp::*;
+        ctx: &mut BasmCtx,
+    ) -> Result<Instruction, InstructionParseErr> {
         let line = line.trim_start();
         if line.len() == 0 {
             return Err(InstructionParseErr::EmptyLine);
         }
         let (comment_removed_line, _) = line.split_once("#").unwrap_or((line, ""));
         let mut line_iter = comment_removed_line.split_whitespace();
-        let name = line_iter.next().unwrap();
+        let mut name = line_iter.next().unwrap();
 
-        // ==== Instruction::Push ===============
-        match name {
-            name if name.len() > 0 && name.ends_with(":") => Ok(Label(
+        if name.len() > 0 && name.ends_with(":") {
+            ctx.insert_label(
                 name[0..name.len() - 1].to_string(),
                 bm.program.len() as Word,
-            )),
-            "nop" => Ok(Inst(Self::Nop)),
+            );
+            name = line_iter.next().unwrap();
+        }
+
+        match name {
+            "nop" => Ok(Self::Nop),
             "push" => match line_iter.next() {
                 Some(op) => match op.parse::<Word>() {
-                    Ok(op) => Ok(Inst(Self::Push(op))),
+                    Ok(op) => Ok(Self::Push(op)),
                     Err(_) => Err(InstructionParseErr::InvalidOperand(line.to_string())),
                 },
                 None => Err(InstructionParseErr::OperandNotFound(line.to_string())),
             },
             "dup" => match line_iter.next() {
                 Some(op) => match op.parse::<Word>() {
-                    Ok(op) => Ok(Inst(Self::Dup(op))),
+                    Ok(op) => Ok(Self::Dup(op)),
                     Err(_) => Err(InstructionParseErr::InvalidOperand(line.to_string())),
                 },
                 None => Err(InstructionParseErr::OperandNotFound(line.to_string())),
             },
-            "plus" => Ok(Inst(Self::Plus)),
-            "minus" => Ok(Inst(Self::Minus)),
-            "div" => Ok(Inst(Self::Div)),
-            "mult" => Ok(Inst(Self::Mult)),
+            "plus" => Ok(Self::Plus),
+            "minus" => Ok(Self::Minus),
+            "div" => Ok(Self::Div),
+            "mult" => Ok(Self::Mult),
             "jmp" => match line_iter.next() {
                 Some(op) => match op.parse::<Word>() {
-                    Ok(op) => Ok(Inst(Self::Jump(Some(op)))),
+                    Ok(op) => Ok(Self::Jump(Some(op))),
                     Err(_) => {
-                        ut.push(UnresolvedLabel {
-                            addr: bm.program.len() as Word,
-                            label: op.to_string(),
-                        });
-                        Ok(Inst(Self::Jump(None)))
+                        ctx.add_deffered_opperand(bm.program.len() as Word, op.to_string());
+                        Ok(Self::Jump(None))
                     }
                 },
                 None => Err(InstructionParseErr::OperandNotFound(line.to_string())),
             },
             "jmpif" => match line_iter.next() {
                 Some(op) => match op.parse::<Word>() {
-                    Ok(op) => Ok(Inst(Self::JumpIf(Some(op)))),
+                    Ok(op) => Ok(Self::JumpIf(Some(op))),
                     Err(_) => {
-                        ut.push(UnresolvedLabel {
-                            addr: bm.program.len() as Word,
-                            label: op.to_string(),
-                        });
-                        Ok(Inst(Self::JumpIf(None)))
+                        ctx.add_deffered_opperand(bm.program.len() as Word, op.to_string());
+                        Ok(Self::JumpIf(None))
                     }
                 },
                 None => Err(InstructionParseErr::OperandNotFound(line.to_string())),
             },
-            "eq" => Ok(Inst(Self::Eq)),
-            "halt" => Ok(Inst(Self::Halt)),
+            "eq" => Ok(Self::Eq),
+            "halt" => Ok(Self::Halt),
             _ => Err(InstructionParseErr::InvalidInstruction(line.to_string())),
         }
     }
