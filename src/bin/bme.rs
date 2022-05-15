@@ -45,6 +45,7 @@ fn main() {
     );
     let mut bm: BM = Default::default();
     bm.load_program_from_memory(program.as_slice());
+    bm.program_to_asm(&mut std::io::stdout()).unwrap();
     match bm.execute_program(limit) {
         Ok(()) => bm.dump_stack(&mut std::io::stdout()).expect("should work"),
         Err(e) => {

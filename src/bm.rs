@@ -7,6 +7,7 @@ pub const BM_PROGRAM_CAPACITY: usize = 1024;
 
 pub type Word = i64;
 
+pub mod instruction;
 pub mod interpreter;
 pub mod serialize_deserialize;
 

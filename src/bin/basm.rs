@@ -1,6 +1,5 @@
-use bm::BM;
+use bm::{bm::serialize_deserialize::LabelTable, BM};
 use std::fs::File;
-
 static USAGE: &'static str = "Usage: ./basm <input_file>.basm <output_file>.bm";
 
 fn main() {
@@ -14,7 +13,9 @@ fn main() {
         )
         .expect("Could not read input file.");
 
-    let program = BM::from_asm(&input_file);
+    let mut bm: BM = Default::default();
+    let mut lt = LabelTable::new();
+    bm.program_from_asm(&input_file, &mut lt);
 
     let output_file = File::options()
         .create(true)
@@ -26,7 +27,5 @@ fn main() {
         )
         .expect("Could not open or create output file");
 
-    let mut bm: BM = Default::default();
-    bm.load_program_from_memory(&program);
     bm.serialize_program_into(&output_file);
 }

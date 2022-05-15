@@ -110,7 +110,7 @@ impl BM {
                 self.ip += 1;
             }
             Instruction::Jump(addr) => {
-                self.ip = addr;
+                self.ip = addr.expect("Address should be a number in interpretter");
             }
             Instruction::JumpIf(addr) => {
                 if self.stack.len() < 1 {
@@ -118,7 +118,7 @@ impl BM {
                 }
                 if self.stack[self.stack.len() - 1] == 1 {
                     self.stack.pop();
-                    self.ip = addr;
+                    self.ip = addr.expect("Address should be a number in interpretter");
                 } else {
                     self.ip += 1;
                 }

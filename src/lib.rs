@@ -1,5 +1,5 @@
 pub mod bm;
 pub use bm::BM;
 
-pub mod instruction;
-pub use instruction::Instruction;
+pub use bm::instruction;
+pub use bm::instruction::Instruction;
