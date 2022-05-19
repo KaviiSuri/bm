@@ -1,4 +1,4 @@
-use bm::{bm::serialize_deserialize::BasmCtx, BM};
+use bm::{serialize_deserialize::BasmCtx, BM};
 use std::fs::File;
 static USAGE: &'static str = "Usage: ./basm <input_file>.basm <output_file>.bm";
 

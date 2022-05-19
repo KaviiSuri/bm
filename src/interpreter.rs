@@ -4,6 +4,7 @@ use crate::{Instruction, BM};
 
 use super::{Word, BM_STACK_CAPACITY};
 
+/// Errors that can be emitted while interpretting instructions
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum InterpreterErr {
     StackOverflow,
@@ -28,6 +29,8 @@ impl Display for InterpreterErr {
 }
 
 impl BM {
+    /// Execute all the instructions of a virtual machine.
+    /// Accepts `limit` as the number of max instructions to be executed.
     pub fn execute_program(&mut self, limit: Option<usize>) -> Result<(), InterpreterErr> {
         let mut i = 1;
         while !self.is_halted() {
@@ -40,6 +43,8 @@ impl BM {
         }
         Ok(())
     }
+
+    /// Exucutes a single instruction
     pub fn execute_instruction(&mut self) -> Result<(), InterpreterErr> {
         if self.ip < 0 || self.program.len() as Word <= self.ip {
             return Err(InterpreterErr::IllegalInstructionAccess(self.ip));

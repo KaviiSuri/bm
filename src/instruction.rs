@@ -2,24 +2,38 @@ use std::fmt::Display;
 
 use serde::{Deserialize, Serialize};
 
-use crate::{bm::Word, BM};
+use crate::{Word, BM};
 
 use super::serialize_deserialize::BasmCtx;
 
+/// An address is the operand of instruction like Jmp and JmpIf.
+/// These can either a Word or None
 type Address = Option<Word>;
 
+/// Instruction represents a singular operation that the virtual machine executes.
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
 pub enum Instruction {
+    /// No Operation
     Nop,
+    /// Push the operand on stack
     Push(Word),
+    /// Duplicate the element which is "operand" places from the top
     Dup(Word),
+    /// Add the top 2 elements of the stack
     Plus,
+    /// Subtract the top element of the stack from the one after it
     Minus,
+    /// Divide the second top element by the top element of the stack.
     Div,
+    /// Multiply the top 2 elements of the stack
     Mult,
+    /// Jump to an address
     Jump(Address),
+    /// Jump to given address if the top of stack isn't zero
     JumpIf(Address),
+    /// Check if top 2 elements of the stack are equal
     Eq,
+    /// Halt program execution
     Halt,
     PrintDebug,
 }
@@ -49,6 +63,7 @@ impl Display for Instruction {
     }
 }
 
+/// Err Generated when parsing instructions
 #[derive(Debug)]
 pub enum InstructionParseErr {
     EmptyLine,
@@ -76,6 +91,7 @@ impl Display for InstructionParseErr {
     }
 }
 
+/// Parse a singular instruction from assembly text.
 impl Instruction {
     pub fn from_asm(
         line: &str,
